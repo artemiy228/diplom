@@ -9,18 +9,12 @@ import { Quiz } from "../../../types/common/Quiz";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 
-const QuizPage: NextPage = (props) => {
+const QuizPage: NextPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [currentVariant, setCurrentVariant] = useState<number | null>(null);
   const [score, setScore] = useState(0);
-  const questionHalf = useMemo(
-    () => 100 / (quiz?.questions_length || 1),
-    [quiz]
-  );
-  const [progress, setProgress] = useState(questionHalf);
-  const [error, setError] = useState<null | string>(null);
-  const isTheLastQuestion = currentIndex + 1 === quiz?.questions.length;
+  const half = useMemo(() => 100 / (quiz?.questions_length || 1), [quiz])
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -31,37 +25,36 @@ const QuizPage: NextPage = (props) => {
 
   function checkVariant() {
     if (currentVariant === null) {
-      setError("Укажите вариант ответа");
+      toast.error('Укажите вариант ответа')
       return false;
-    }
-    if (question?.correct === currentVariant) {
-      setScore(score + 1);
     }
     return true;
   }
 
   function handleAnswer() {
     if (!checkVariant()) return;
-    setProgress(progress + questionHalf);
-    setCurrentIndex(currentIndex + 1);
-    setCurrentVariant(null);
-    setError(null);
-  }
-
-  function finish() {
-    if (!checkVariant()) return;
-    const path = doc(
-      db,
-      "results",
-      router.query.id as string,
-      "users",
-      session?.user.name as string
-    );
-    setDoc(path, { score, of: quiz?.questions_length, title: quiz?.title })
-      .then((res) => {
-        router.push(`/quiz/${router.query.id}/results`);
-      })
-      .catch(() => toast.error("Возникла ошибка"));
+    let newScore = score
+    if (question?.correct === currentVariant) {
+      newScore += 1
+    }
+    if (currentIndex + 1 < (quiz?.questions_length || 0)) {
+      setScore(newScore)
+      setCurrentIndex(currentIndex + 1);
+      setCurrentVariant(null);
+    } else {
+      const path = doc(
+        db,
+        "results",
+        router.query.id as string,
+        "users",
+        session?.user.name as string
+      );
+      setDoc(path, { score: newScore, of: quiz?.questions_length, title: quiz?.title })
+        .then(() => {
+          router.push(`/quiz/${router.query.id}/results`);
+        })
+        .catch(() => toast.error("Возникла ошибка"));
+    }
   }
 
   useEffect(() => {
@@ -81,10 +74,10 @@ const QuizPage: NextPage = (props) => {
         <div className="w-full sm:w-1/2 md:w-1/4 xl:w-1/5 outline outline-4 outline-gray-600 rounded-full bg-gray-700">
           <div
             className="bg-gradient-to-r transition-all duration-500 from-indigo-500 via-purple-500 to-pink-500 text-sm font-semibold max-w-full text-blue-100 text-center p-2 leading-none rounded-full"
-            style={{ width: `${progress}%` }}
+            style={{ width: `${currentIndex * half}%` }}
           >
             {" "}
-            {progress}%
+            {(currentIndex * half).toFixed(1)}%
           </div>
         </div>
       </div>
@@ -94,7 +87,6 @@ const QuizPage: NextPage = (props) => {
         </div>
 
         <div className="flex flex-col space-y-5 justify-end cursor-pointer transition-all duration-300">
-          <div className="text-red-500 font-semibold text-lg">{error}</div>
           {question?.variants.map((variant, index) => (
             <div
               key={variant}
@@ -108,21 +100,13 @@ const QuizPage: NextPage = (props) => {
             </div>
           ))}
         </div>
-        {isTheLastQuestion ? (
-          <button
-            onClick={finish}
-            className="px-4 py-2 my-5 transition-all duration-300 active:bg-blue-700 hover:bg-blue-600 float-right rounded-md bg-blue-500 text-white"
-          >
-            Завершить тест
-          </button>
-        ) : (
+        
           <button
             onClick={handleAnswer}
             className="px-4 py-2 my-5 transition-all duration-300 active:bg-blue-700 hover:bg-blue-600 float-right rounded-md bg-blue-500 text-white"
           >
             Продолжить
           </button>
-        )}
       </div>
     </Auth>
   );
