@@ -4,8 +4,8 @@ import { Auth } from "../../../modules/auth/Auth";
 import { useRouter } from "next/dist/client/router";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../../lib/db";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useAuth } from "../../../context/AuthContext";
 
 const ResultsPage: NextPage = () => {
   const [result, setResult] = useState({
@@ -14,13 +14,13 @@ const ResultsPage: NextPage = () => {
     title: "",
   });
   const router = useRouter();
-  const { data: session } = useSession();
+  const { username } = useAuth();
 
   useEffect(() => {
     if (!router.query.id) return;
     const query = doc(
       db,
-      `results/${router.query.id}/users/${session?.user.name}`
+      `results/${router.query.id}`
     );
     getDoc(query).then((snapshot) => {
       if (snapshot.exists()) {
@@ -33,19 +33,17 @@ const ResultsPage: NextPage = () => {
   return (
     <Auth>
       <div className="flex flex-col items-center p-5 border-dashed border-b-2 border-gray-600">
-        <div className="text-white text-xl font-semibold">
-          {result.score} / {result.of}
-        </div>
         <div className="text-gray-400">{result.title}</div>
       </div>
       <div className="md:w-3/4 xl:w-1/2 flex flex-col items-center mx-2 my-8 md:mx-auto rounded-lg p-7 bg-gray-600">
         <div className="text-white font-semibold text-4xl">
-          Вы делаете успехи!
+          Ваши ответы учтены!
         </div>
-        <div className="text-center w-full md:w-4/5 my-4 text-gray-400 font-semibold text-lg">
-          Даже если вы еще не знаете всех ответов, самопроверка — самый лучший
-          способ их усвоить. Так держать!
-        </div>
+        <Link href={`/quiz/${router.query.id}/user/${username}`}>
+          <button className="px-4 my-2 py-2 w-full sm:w-1/2 transition-all duration-300 active:bg-blue-700 hover:bg-blue-600 rounded-md bg-blue-500 text-white">
+            Посмотреть ответы
+          </button>
+        </Link>
         <Link href="/">
           <button className="px-4 py-2 w-full sm:w-1/2 transition-all duration-300 active:bg-blue-700 hover:bg-blue-600 rounded-md bg-blue-500 text-white">
             Вернуться на главную

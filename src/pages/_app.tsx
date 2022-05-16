@@ -1,17 +1,17 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
+import { AuthProvider } from "../context/AuthContext";
 
 type Props = AppProps & { session: Session };
 
 function MyApp({ Component, pageProps, session }: Props) {
   return (
-    <SessionProvider session={session}>
+    <AuthProvider>
       <Component {...pageProps} />
       <Toaster position="top-right" />
-    </SessionProvider>
+    </AuthProvider>
   );
 }
 

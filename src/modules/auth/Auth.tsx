@@ -1,12 +1,15 @@
-import { useSession } from "next-auth/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { __BROWSER__ } from "../../constants/env";
+import { useAuth } from "../../context/AuthContext";
 
 export const Auth: React.FC = ({ children }) => {
-  const { data: session } = useSession({ required: true });
+  const { isLoading, check } = useAuth();
 
-  if (session?.user) {
-    return <>{children}</>;
+  useEffect(check, []) 
+
+  if (isLoading) {
+    return <div>Загрузка сессии</div>;
   }
-  return <div>Загрузка сессии</div>;
+
+  return <>{children}</>
 };

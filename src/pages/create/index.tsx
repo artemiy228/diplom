@@ -21,7 +21,6 @@ const CreateQuiz: NextPage = () => {
       ...forms,
       {
         label: "",
-        correct: 0,
         variants: [],
       },
     ]);
@@ -40,16 +39,6 @@ const CreateQuiz: NextPage = () => {
   const addVariant = (ind: number) => () => {
     const newForms = forms.map((form, index) => {
       if (index === ind) return { ...form, variants: [...form.variants, ""] };
-      return form;
-    });
-    setForms(newForms);
-  };
-
-  const chooseCorrect = (ind: number) => (correct: number) => {
-    const newForms = forms.map((form, index) => {
-      if (index === ind) {
-        return { ...form, correct };
-      }
       return form;
     });
     setForms(newForms);
@@ -117,7 +106,6 @@ const CreateQuiz: NextPage = () => {
           <QuestionForm
             deleteVariant={deleteVariant(index)}
             changeVariant={changeVariant(index)}
-            chooseCorrect={chooseCorrect(index)}
             addVariant={addVariant(index)}
             changeLabel={changeLabel(index)}
             key={index}

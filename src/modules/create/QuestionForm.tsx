@@ -11,7 +11,6 @@ interface QuestionFormProps extends Question {
   changeVariant: (index: number, value: string) => void;
   changeLabel: (value: string) => void;
   deleteVariant: (index: number) => void;
-  chooseCorrect: (index: number) => void;
 }
 
 export const QuestionForm: React.FC<QuestionFormProps> = memo((props) => {
@@ -55,15 +54,14 @@ export const QuestionForm: React.FC<QuestionFormProps> = memo((props) => {
                 >
                   <TrashIcon />
                 </Button>
-                <Button
-                  onClick={() => props.chooseCorrect(index)}
+                {/* <Button
                   color="gray"
                   className={`p-3 col-span-1 text-white ${
                     props.correct === index ? "bg-emerald-400" : "bg-gray-500"
                   }`}
                 >
                   <CheckIcon />
-                </Button>
+                </Button> */}
               </div>
             )}
           </div>

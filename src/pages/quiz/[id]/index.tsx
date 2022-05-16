@@ -2,21 +2,22 @@ import React, { useEffect, useMemo, useState } from "react";
 import { NextPage } from "next";
 import { Checkbox } from "../../../components/Checkbox";
 import { Auth } from "../../../modules/auth/Auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, query, setDoc } from "firebase/firestore";
 import { db } from "../../../lib/db";
 import { useRouter } from "next/dist/client/router";
 import { Quiz } from "../../../types/common/Quiz";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
+import { useAuth } from "../../../context/AuthContext";
 
 const QuizPage: NextPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [currentVariant, setCurrentVariant] = useState<number | null>(null);
-  const [score, setScore] = useState(0);
   const half = useMemo(() => 100 / (quiz?.questions_length || 1), [quiz])
   const router = useRouter();
-  const { data: session } = useSession();
+  const { username } = useAuth()
+  const [answers, setAnswers] = useState<any[]>([])
 
   const question = useMemo(
     () => quiz?.questions[currentIndex],
@@ -33,23 +34,23 @@ const QuizPage: NextPage = () => {
 
   function handleAnswer() {
     if (!checkVariant()) return;
-    let newScore = score
-    if (question?.correct === currentVariant) {
-      newScore += 1
-    }
-    if (currentIndex + 1 < (quiz?.questions_length || 0)) {
-      setScore(newScore)
+    const newAnswers = answers.concat(currentVariant)
+    setAnswers(newAnswers)
+    if (currentIndex + 1 < (quiz?.questions.length || 0)) {
       setCurrentIndex(currentIndex + 1);
       setCurrentVariant(null);
     } else {
+      const users = doc(collection(db, "quiz", router.query.id as string, "users"))
+      setDoc(users, { username })
+
       const path = doc(
         db,
         "results",
         router.query.id as string,
         "users",
-        session?.user.name as string
+        username as string
       );
-      setDoc(path, { score: newScore, of: quiz?.questions_length, title: quiz?.title })
+      setDoc(path, { of: quiz?.questions_length, title: quiz?.title, answers: newAnswers, questions: quiz?.questions })
         .then(() => {
           router.push(`/quiz/${router.query.id}/results`);
         })

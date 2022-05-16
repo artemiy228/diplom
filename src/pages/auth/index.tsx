@@ -1,29 +1,29 @@
 import { NextPage } from "next";
-import { signIn, getProviders, ClientSafeProvider } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Button } from "../../components/Button";
+import { useAuth } from "../../context/AuthContext";
+import toast from "react-hot-toast";
 
 const AuthPage: NextPage = () => {
-  const [providers, setProviders] = useState<ClientSafeProvider[]>([]);
+  const [username, setUsername] = useState('')
+  const { login } = useAuth()
 
-  useEffect(() => {
-    getProviders().then((providers) =>
-      setProviders(Object.values(providers as object))
-    );
-  }, []);
+  const submitHandler = () => {
+    if (username) { 
+      toast.success("Успешно!")
+      login(username)
+    } else {
+      toast.error("Ошибка авторизации!")
+    }
+  }
 
   return (
     <div className="w-screen h-screen flex items-center justify-center">
       <div className="px-12 py-4 flex flex-col space-y-4 items-center rounded-lg">
-        {providers.map((provider) => (
-          <button
-            onClick={() =>
-              signIn(provider.id, { callbackUrl: `${window.location.origin}` })
-            }
-            className="flex rounded-md text-lg font-medium bg-gray-500 text-white py-3 px-20 items-center space-x-2"
-          >
-            Продолжить с {provider.name}
-          </button>
-        ))}
+          <input value={username} onChange={e => setUsername(e.target.value)} placeholder="Ваше имя пользователя" />
+          <Button onClick={submitHandler} color="blue" disabled={!!username.length}>
+            Продолжить
+          </Button>
       </div>
     </div>
   );
