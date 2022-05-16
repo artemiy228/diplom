@@ -93,7 +93,7 @@ const CreateQuiz: NextPage = () => {
       questions: forms,
     })
       .then(() => router.push(`/quiz/${id}`))
-      .catch((err) => toast.error("Ошибка при опубликации опроса"));
+      .catch((err) => toast.error("Ошибка при публикации опроса"));
   }
 
   return (
