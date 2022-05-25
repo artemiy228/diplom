@@ -3,6 +3,7 @@ import { useRouter } from "next/dist/client/router"
 import Link from "next/link"
 import React, { useEffect, useMemo, useState } from "react"
 import { db } from "../../../lib/db"
+import { Admin } from "../../../modules/admin/Admin"
 import { Auth } from "../../../modules/auth/Auth"
 
 const Users = () => {
@@ -45,6 +46,7 @@ const Users = () => {
 
     return (
         <Auth>
+            <Admin />
             <div className="flex justify-center items-center">
                 <div className="py-5 w-full mx-4 md:w-[70%]">
                     <div className="text-2xl text-white">Прошедшие {title}</div>

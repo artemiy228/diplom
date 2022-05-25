@@ -4,8 +4,7 @@ import { Auth } from "../../../modules/auth/Auth";
 import { useRouter } from "next/dist/client/router";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../../lib/db";
-import Link from "next/link";
-import { useAuth } from "../../../context/AuthContext";
+import { Link } from "@mui/material";
 
 const ResultsPage: NextPage = () => {
   const [result, setResult] = useState({
@@ -14,7 +13,6 @@ const ResultsPage: NextPage = () => {
     title: "",
   });
   const router = useRouter();
-  const { username } = useAuth();
 
   useEffect(() => {
     if (!router.query.id) return;
@@ -37,17 +35,10 @@ const ResultsPage: NextPage = () => {
       </div>
       <div className="md:w-3/4 xl:w-1/2 flex flex-col items-center mx-2 my-8 md:mx-auto rounded-lg p-7 bg-gray-600">
         <div className="text-white font-semibold text-4xl">
-          Ваши ответы учтены!
+          Ваши ответы буду рассмотрены!
         </div>
-        <Link href={`/quiz/${router.query.id}/user/${username}`}>
-          <button className="px-4 my-2 py-2 w-full sm:w-1/2 transition-all duration-300 active:bg-blue-700 hover:bg-blue-600 rounded-md bg-blue-500 text-white">
-            Посмотреть ответы
-          </button>
-        </Link>
-        <Link href="/">
-          <button className="px-4 py-2 w-full sm:w-1/2 transition-all duration-300 active:bg-blue-700 hover:bg-blue-600 rounded-md bg-blue-500 text-white">
+        <Link fontSize="24px" sx={{ mt: 2 }} color="#ffffff" href="/">
             Вернуться на главную
-          </button>
         </Link>
       </div>
     </Auth>

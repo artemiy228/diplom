@@ -1,8 +1,9 @@
+import { Button } from "@mui/material";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/dist/client/router";
 import React, { useEffect, useState } from "react";
-import { Button } from "../../../../components/Button";
 import { db } from "../../../../lib/db";
+import { Admin } from "../../../../modules/admin/Admin";
 import { Auth } from "../../../../modules/auth/Auth";
 
 const UserResult: React.FC = () => {
@@ -32,9 +33,10 @@ const UserResult: React.FC = () => {
 
     return (
         <Auth>
+            <Admin />
             <div className="flex justify-center items-center">
             <div className="py-5 w-full mx-4 md:w-[70%]">
-                <Button color="gray" onClick={() => window.history.go(-1)}>Назад</Button>
+                <Button onClick={() => window.history.go(-1)}>Назад</Button>
                 <div className="text-4xl my-2 text-white">Результаты пользователя <span className="font-semibold underline">{name}</span></div>
                 <div className="my-5">
                     {data.questions.map(({ variants, label }: any, indx: number) => (

@@ -3,12 +3,10 @@ import { NextPage } from "next";
 import { Checkbox } from "../../../components/Checkbox";
 import { Auth } from "../../../modules/auth/Auth";
 import { addDoc, collection, doc, getDoc, query, setDoc } from "firebase/firestore";
-import { db } from "../../../lib/db";
+import { db, useAuth } from "../../../lib/db";
 import { useRouter } from "next/dist/client/router";
 import { Quiz } from "../../../types/common/Quiz";
-import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
-import { useAuth } from "../../../context/AuthContext";
 
 const QuizPage: NextPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -16,7 +14,7 @@ const QuizPage: NextPage = () => {
   const [currentVariant, setCurrentVariant] = useState<number | null>(null);
   const half = useMemo(() => 100 / (quiz?.questions_length || 1), [quiz])
   const router = useRouter();
-  const { username } = useAuth()
+  const { currentUser } = useAuth()
   const [answers, setAnswers] = useState<any[]>([])
 
   const question = useMemo(
@@ -41,14 +39,14 @@ const QuizPage: NextPage = () => {
       setCurrentVariant(null);
     } else {
       const users = doc(collection(db, "quiz", router.query.id as string, "users"))
-      setDoc(users, { username })
+      setDoc(users, { username: currentUser?.email })
 
       const path = doc(
         db,
         "results",
         router.query.id as string,
         "users",
-        username as string
+        currentUser?.email as string
       );
       setDoc(path, { of: quiz?.questions_length, title: quiz?.title, answers: newAnswers, questions: quiz?.questions })
         .then(() => {
@@ -71,7 +69,7 @@ const QuizPage: NextPage = () => {
   return (
     <Auth>
       <div className="w-full sm:flex sm:items-center space-y-4 sm:space-y-0 justify-between p-5 border-dashed border-b-2 border-gray-600">
-        <div className="text-white text-3xl sm:text-2xl">Example Quiz</div>
+        <div className="text-white text-3xl sm:text-2xl">{quiz?.title}</div>
         <div className="w-full sm:w-1/2 md:w-1/4 xl:w-1/5 outline outline-4 outline-gray-600 rounded-full bg-gray-700">
           <div
             className="bg-gradient-to-r transition-all duration-500 from-indigo-500 via-purple-500 to-pink-500 text-sm font-semibold max-w-full text-blue-100 text-center p-2 leading-none rounded-full"

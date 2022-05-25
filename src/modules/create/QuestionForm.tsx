@@ -1,10 +1,9 @@
 import React, { memo, useRef, useState } from "react";
-import { Button } from "../../components/Button";
-import { TrashIcon } from "../../components/TrashIcon";
 import { Question } from "../../types/common/Question";
 import TextareaAutosize from "react-textarea-autosize";
-import { CheckIcon } from "../../components/CheckIcon";
 import { useOnClickOutside } from "../../hooks/useOnClickOutside";
+import { Button } from "@mui/material";
+import { Delete } from "@mui/icons-material";
 
 interface QuestionFormProps extends Question {
   addVariant: VoidFunction;
@@ -48,20 +47,11 @@ export const QuestionForm: React.FC<QuestionFormProps> = memo((props) => {
             {isFocused && (
               <div className="flex items-center space-x-2">
                 <Button
+                  color="error"
                   onClick={() => props.deleteVariant(index)}
-                  color="red"
-                  className="p-3 col-span-1 text-white bg-red-500"
                 >
-                  <TrashIcon />
+                  <Delete />
                 </Button>
-                {/* <Button
-                  color="gray"
-                  className={`p-3 col-span-1 text-white ${
-                    props.correct === index ? "bg-emerald-400" : "bg-gray-500"
-                  }`}
-                >
-                  <CheckIcon />
-                </Button> */}
               </div>
             )}
           </div>

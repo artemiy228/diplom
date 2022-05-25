@@ -2,7 +2,6 @@ import { collection, doc, setDoc } from "firebase/firestore";
 import { NextPage } from "next";
 import { useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
-import { Button } from "../../components/Button";
 import { db } from "../../lib/db";
 import { Auth } from "../../modules/auth/Auth";
 import { QuestionForm } from "../../modules/create/QuestionForm";
@@ -10,6 +9,7 @@ import { Question } from "../../types/common/Question";
 import { v4 as uuid } from "uuid";
 import toast from "react-hot-toast";
 import { useRouter } from "next/dist/client/router";
+import { Button } from "@mui/material";
 
 const CreateQuiz: NextPage = () => {
   const [title, setTitle] = useState("");
@@ -89,7 +89,7 @@ const CreateQuiz: NextPage = () => {
     <Auth>
       <div className="flex items-center justify-between p-4 border-dashed border-b-2 border-gray-600">
         <div className="text-white text-xl font-semibold"></div>
-        <Button onClick={submit} color="blue">
+        <Button color="secondary" onClick={submit}>
           Опубликовать
         </Button>
       </div>
@@ -113,7 +113,7 @@ const CreateQuiz: NextPage = () => {
           />
         ))}
         <div className="flex items-center">
-          <Button onClick={addQuestion} color="gray">
+          <Button onClick={addQuestion} color="secondary">
             Добавить вопрос
           </Button>
         </div>
