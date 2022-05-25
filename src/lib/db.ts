@@ -1,8 +1,8 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { ADMIN_EMAIL, firebaseConfig } from "../constants/firebaseConfig";
-import { getAuth } from "firebase/auth";
-import { useMemo } from "react";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { firebaseConfig } from "../constants/firebaseConfig";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useEffect, useMemo, useState } from "react";
 
 
 const app = initializeApp(firebaseConfig);
@@ -12,5 +12,24 @@ export const useAuth = () => useMemo(() => getAuth(app), [])
 export const useFirestore = () => getFirestore(app)
 export const useIsAdmin = () => {
     const auth = useAuth()
-    return auth.currentUser?.email === ADMIN_EMAIL
+    const firestore = useFirestore()
+    const [isAdmin, setIsAdmin] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+        const observer = onAuthStateChanged(auth, () => {
+            try {
+                getDoc(doc(firestore, "admins", auth.currentUser?.uid as string)).then(res => {
+                    if (res.exists()) setIsAdmin(true)
+                }).finally(() => {
+                    setIsLoading(false)
+                })
+            } catch {
+                
+            }
+        })
+        return () => observer()
+    }, [])
+
+    return { isAdmin, isLoading } // auth.currentUser?.email === ADMIN_EMAIL
 }

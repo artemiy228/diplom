@@ -29,6 +29,7 @@ const Users = () => {
             const list = snapshots.docs.map((doc) => doc.data());
             console.log(list)
             setUsers(list)
+        }).catch(e => {
         })
     }, [id])
 

@@ -5,14 +5,19 @@ import { useIsAdmin } from '../../lib/db'
 
 export const Admin: React.FC = ({ children }) => {
     const router = useRouter()
-    const isAdmin = useIsAdmin()
+    const { isAdmin, isLoading } = useIsAdmin()
+
 
     useEffect(() => {
-        if (!isAdmin) {
+        if (!isAdmin && !isLoading) {
             toast.error("У вас нет прав для посещения этой страницы!")
             router.push('/')
         }
     }, [isAdmin])
+
+    if (isLoading) {
+        return <>Loading...</>
+    }
 
     return <>{children}</>
 }

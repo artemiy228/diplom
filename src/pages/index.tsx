@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 const Home: NextPage = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const auth = useAuth()
-  const isAdmin = useIsAdmin()
+  const { isAdmin } = useIsAdmin()
   const firestore = useFirestore()
   const [quizId, setQuizId] = useState<null | string>(null)
   const [isOpen, setOpen] = useState(false)
