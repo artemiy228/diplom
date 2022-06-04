@@ -72,6 +72,11 @@ const LoginPage: NextPage = () => {
               error={!!errors.email}
               helperText={errors.email ? "Введите коректный электронный адрес" : ''}
               autoComplete="email"
+              inputProps={{
+                style: {
+                  color: 'white'
+                }
+              }}
               autoFocus
             />
             <TextField
@@ -88,6 +93,11 @@ const LoginPage: NextPage = () => {
               onChange={handleChange}
               autoComplete="current-password"
               error={!!errors.password}
+              inputProps={{
+                style: {
+                  color: 'white'
+                }
+              }}
               helperText={errors.password ? "Введите коректный пароль" : ""}
             />
             

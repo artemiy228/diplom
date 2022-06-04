@@ -84,6 +84,11 @@ const SignUp: NextPage = () => {
                   error={!!errors.username}
                   helperText={errors.username ? "Неверное имя пользователя" : ''}
                   autoFocus
+                  inputProps={{
+                    style: {
+                      color: 'white'
+                    }
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -100,6 +105,11 @@ const SignUp: NextPage = () => {
                   error={!!errors.email}
                   helperText={errors.email ? "Неверный электронный адрес" : ''}
                   autoComplete="email"
+                  inputProps={{
+                    style: {
+                      color: 'white'
+                    }
+                  }}
                 />
               </Grid>
               <Grid item sx={{ mb: 1 }} xs={12}>
@@ -113,7 +123,12 @@ const SignUp: NextPage = () => {
                   type="password"
                   id="password"
                   color="primary"
-            variant="filled"
+                  inputProps={{
+                    style: {
+                      color: 'white'
+                    }
+                  }}
+                  variant="filled"
                   error={!!errors.password}
                   helperText={errors.password ? "Неверный пароль" : ""}
                   autoComplete="new-password"
