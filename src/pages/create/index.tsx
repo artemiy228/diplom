@@ -88,7 +88,7 @@ const CreateQuiz: NextPage = () => {
   return (
     <Auth>
       <div className="flex items-center justify-between p-4 border-dashed border-b-2 border-gray-600">
-        <div className="text-white text-xl font-semibold"></div>
+      <Button onClick={() => window.history.go(-1)}>Назад</Button>
         <Button color="secondary" onClick={submit}>
           Опубликовать
         </Button>

@@ -74,9 +74,12 @@ const LoginPage: NextPage = () => {
               autoComplete="email"
               inputProps={{
                 style: {
-                  color: 'white'
-                }
+                  color: 'white',
+                },
               }}
+              InputLabelProps={{
+                style: { color: '#fff'}, 
+             }}
               autoFocus
             />
             <TextField
@@ -98,6 +101,9 @@ const LoginPage: NextPage = () => {
                   color: 'white'
                 }
               }}
+              InputLabelProps={{
+                style: { color: '#fff'}, 
+             }}
               helperText={errors.password ? "Введите коректный пароль" : ""}
             />
             

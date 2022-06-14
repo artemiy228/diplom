@@ -89,6 +89,9 @@ const SignUp: NextPage = () => {
                       color: 'white'
                     }
                   }}
+                  InputLabelProps={{
+                    style: { color: '#fff'}, 
+                 }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -110,6 +113,9 @@ const SignUp: NextPage = () => {
                       color: 'white'
                     }
                   }}
+                  InputLabelProps={{
+                    style: { color: '#fff'}, 
+                 }}
                 />
               </Grid>
               <Grid item sx={{ mb: 1 }} xs={12}>
@@ -128,6 +134,9 @@ const SignUp: NextPage = () => {
                       color: 'white'
                     }
                   }}
+                  InputLabelProps={{
+                    style: { color: '#fff'}, 
+                 }}
                   variant="filled"
                   error={!!errors.password}
                   helperText={errors.password ? "Неверный пароль" : ""}

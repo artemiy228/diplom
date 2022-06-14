@@ -1,3 +1,4 @@
+import { Button } from "@mui/material"
 import { collection, doc, getDoc, getDocs } from "firebase/firestore"
 import { useRouter } from "next/dist/client/router"
 import Link from "next/link"
@@ -50,6 +51,7 @@ const Users = () => {
             <Admin />
             <div className="flex justify-center items-center">
                 <div className="py-5 w-full mx-4 md:w-[70%]">
+                <Button onClick={() => window.history.go(-1)}>Назад</Button>
                     <div className="text-2xl text-white">Прошедшие {title}</div>
                     {us?.map(user => (
                         <Link key={user} href={`/quiz/${id}/user/${user}`}>
